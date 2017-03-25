@@ -1,0 +1,42 @@
+<ons-page id="menu_page">
+    <ons-toolbar>
+        <div class="center" id="title_user_name">メニュー</div>
+        <div class="right">
+            <ons-toolbar-button>
+                <ons-icon icon="ion-gear-a" onclick="showSettingPage()"></ons-icon>
+            </ons-toolbar-button>
+        </div>
+    </ons-toolbar>
+    <ons-list>
+        <ons-list-header>自分の本棚</ons-list-header>
+        <ons-list-item class="list__item--tappable list__item__line-height" modifier="chevron">
+            <ons-row onclick="bookNavi.pushPage('inputBookName.html');setOwnerName();">本を登録する</ons-row>    
+        </ons-list-item>
+        <ons-list-item class="list__item--tappable list__item__line-height" modifier="chevron">
+            <ons-row onclick="bookNavi.pushPage('booksList.html');showBooks('myBookshelf','');">持っている本を確認する</ons-row>    
+        </ons-list-item>        
+
+<!--未実装部分
+        <ons-list-item class="list__item--tappable list__item__line-height" modifier="chevron">
+            <ons-row>x 新刊一覧</ons-row>    
+        </ons-list-item>
+        <ons-list-item class="list__item--tappable list__item__line-height" modifier="chevron">
+            <ons-row onclick="bookNavi.pushPage('delBookName.html');setOwnerName();">x 登録した本を消す</ons-row>    
+        </ons-list-item>-->
+
+<!--未実装部分
+        <ons-list-header>みんなの本棚</ons-list-header>
+        <ons-list-item class="list__item--tappable list__item__line-height" modifier="chevron">
+            <ons-row>x スタンド使いはひかれあう・・・</ons-row>    
+        </ons-list-item>
+        <ons-list-item class="list__item--tappable list__item__line-height" modifier="chevron">
+            <ons-row>x 他の人の感想を見る</ons-row>    
+        </ons-list-item>-->
+        
+        <ons-list-header>仲間の本棚</ons-list-header>
+        <ons-list-item class="list__item--tappable list__item__line-height" modifier="chevron">
+            <ons-row onclick="bookNavi.pushPage('html/group/showGroups.html');getGroupsList('belongGroups');">仲間の本棚を見る（借りる）</ons-row>    
+        </ons-list-item>
+        
+    </ons-list>    
+</ons-page>

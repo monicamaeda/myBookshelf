@@ -1,0 +1,18 @@
+<ons-page id="make_group_page">
+    <ons-toolbar>
+        <div class="left"><ons-back-button>戻る</ons-back-button></div>
+        <div class="center">グループを作る</div>
+    </ons-toolbar>
+    
+    <div style="text-align: center">
+        <p>グループタイトル:</p>
+        <input class="text-input" id="input_group_name" placeholder="グループ名" onclick="setOwnerName()">
+        <br/>
+        <p>説明：</p>
+        <textarea class="textarea" id="input_group_disp" placeholder="どんなグループか説明してください"></textarea>
+        <br/>
+        <p>管理者（作成者）：</p>
+        <input class="text-input owner_name" id="input_group_Admin" placeholder="管理者（自動入力）" onclick="setOwnerName()">
+        <ons-button onclick="makeNewGroup()">グループを作成する！</ons-button>
+    </div>
+</ons-page>

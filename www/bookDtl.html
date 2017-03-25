@@ -1,0 +1,36 @@
+<ons-page id="Book_Dtl_page">
+  <ons-toolbar>
+    <span class="left"><ons-back-button>戻る</ons-back-button></span>
+    <span class="center">本の詳細</span>
+  </ons-toolbar>
+
+  <ons-list modifier="inset">
+    <ons-list-header>本の詳細情報</ons-list-header>
+    <!--<ons-list-item>
+          <img src="" width="42" class="to-image">        
+    </ons-list-item>-->
+    <ons-list-item class="to-wrapper">
+      <ons-row>
+        <ons-col>
+          <span class="dtl_label">タイトル：</span>
+          <span class="book_name_dtl"></span>
+        </ons-col>
+        <ons-col>
+          <span class="book_number_dtl"></span>巻
+        </ons-col>
+      </ons-row>
+    </ons-list-item>
+    <ons-list-item>
+        <span class="dtl_label">持ち主：</span>
+        <span class="owner_name_dtl"></span>
+    </ons-list-item>
+    <ons-list-item>
+        <span class="dtl_label">借りてる人：</span>
+        <span class="borrow_user_dtl">（誰も借りてません）</span>
+    </ons-list-item>
+
+  </ons-list>
+  <div id="borrow_book_button_field">
+      
+  </div>
+</ons-page>

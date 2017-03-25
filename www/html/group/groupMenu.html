@@ -1,0 +1,18 @@
+<ons-page id="group_menu_page">
+    <ons-toolbar>
+        <div class="center">グループメニュー</div>
+    </ons-toolbar>
+    <ons-list>
+        <ons-list-header>グループ</ons-list-header>
+        <ons-list-item class="list__item--tappable list__item__line-height" modifier="chevron">
+            <ons-row onclick="bookNavi.pushPage('html/group/makeGroup.html');">グループを作る</ons-row>    
+        </ons-list-item>
+        <ons-list-item class="list__item--tappable list__item__line-height" modifier="chevron">
+            <ons-row onclick="bookNavi.pushPage('html/group/myGroups.html');getGroupsList('myGroups');">他の人を自分のグループに入れる</ons-row>
+        </ons-list-item>
+        <!--<ons-list-item class="list__item--tappable list__item__line-height" modifier="chevron">
+            <ons-row onclick="bookNavi.pushPage('html/group/showGroups.html');getGroupList(otherGroups);">他のグループに新しく入る</ons-row>    
+        </ons-list-item>        -->
+    </ons-list>    
+
+</ons-page>

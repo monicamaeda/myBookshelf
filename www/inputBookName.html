@@ -1,0 +1,23 @@
+<ons-page id="input_book_page">
+    <ons-toolbar>
+      <div class="left">
+        <div class="left"><ons-back-button>戻る</ons-back-button></div>
+        <div class="center">登録画面</div>
+      </div>
+    </ons-toolbar>
+    
+    <div style="text-align: center">
+        <p>本のタイトル:</p>
+        <input type="text" class="text-input" id="book_name" onclick="setOwnerName()">
+        <br/>
+        <p>巻数：</p>
+        <input type="number" class="text-input" id="book_number" min="1" max="300">
+        <br/>
+        <p>本の所有者</p>
+        <input type="text" class="text-input owner_name" id="input_owner_name" onclick="setOwnerName()">
+        <br/>
+        <span id="input_book_area"></span>
+        <br/>
+        <span id="created_message"></span>
+    </div>
+</ons-page>
