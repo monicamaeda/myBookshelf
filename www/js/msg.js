@@ -56,3 +56,24 @@ function joinChooseUserInMyGroup(user,rollName){
     }
   });
 }
+
+function friendCanLookMyBookShelfMsg(user){
+  ons.notification.confirm({
+    message: '['+ user.get("userName") + ']さんに自分の本棚を見れるようにしますか？相手があなたの本棚を見て、借りることができるようになります。',
+    // もしくは messageHTML: '<div>HTML形式のメッセージ</div>',
+    title: '確認',
+    buttonLabels: ['はい', 'いいえ'],
+    animation: 'default', // もしくは'none'
+    primaryButtonIndex: 1,
+    cancelable: true,
+    callback: function(index) {
+        if(index == 0){
+            addUserMyBookShelf(user);
+        } else if (index == 1){
+            
+        }
+      // -1: キャンセルされた
+      // 0-: 左から0ではじまるボタン番号
+    }
+  });
+}

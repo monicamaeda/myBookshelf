@@ -1,13 +1,12 @@
-<ons-page id="show_users_page">
+<ons-page id="can_look_friend">
     <ons-toolbar>
         <div class="left"><ons-back-button>戻る</ons-back-button></div>
-        <div class="center">ユーザー一覧</div>
+        <div class="center">私の本棚を友達に公開する</div>
     </ons-toolbar>
-    <p>選択中のグループ名:</p>
     <div id="choose_group_name"></div>
-    <p>このグループに追加するユーザー名を入力してください</p>
+    <p>紹介する人の名前を検索してください</p>
     <div class="right"><input type="search" class="search-input search_user_name" placeholder="検索したい人の名前を入れてください"></input></div>
-    <ons-button onclick="searchUser(GroupMode)">名前で検索！</ons-button>
+    <ons-button onclick="searchUser('BookShelfMode')">名前で検索！</ons-button>
     <div style="text-align: center">
         <ons-list id="usersListView">
             

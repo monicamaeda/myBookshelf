@@ -30,6 +30,7 @@ function logout(){
         bookNavi.resetToPage("home.html");
     })
     .catch(function(err){
+        //基本的にはこの処理は通らない
         console.log(err);
         bookNavi.pushPage("login.html");
     });
@@ -48,6 +49,7 @@ function userLogin(signUpFlag){
             })
             .catch(function(err){
                 alert("ログインに失敗しました。ユーザーとパスワードが合っているか確認してください。");
+                console.log(err.message);
             })
     } else {
         //会員のインスタンスを作成
@@ -57,13 +59,21 @@ function userLogin(signUpFlag){
         user.set("userName", userName);
         user.set("password", password);
         
+        //aclをPublicにして、誰でもアクセスできるようにする。
+        var acl = new ncmb.Acl();
+        acl.setPublicReadAccess(true);
+        acl.setPublicWriteAccess(true);
+        //権限をセット
+        user.set("acl", acl);
+        
         //会員登録を実行し、上で設定されたコールバックが実行される
         user.signUpByAccount()
             .then(function(data){
               bookNavi.pushPage("common.html");
+              ncmb.User.login(userName, password);
             })
             .catch(function(err){
-                alert("new user err");
+                alert("ユーザー作成を失敗しました。再度試してだめな場合にはお問合せください");
             })
     }
 }
@@ -167,10 +177,14 @@ function getOwnerIntoGroupList(groupName){
               });
 }
 
-function drowOwnerList(owner,i,callback) {
+function drowOwnerList(owner,i,callback,mode) {
     var no = i + 1;
     var objectId = owner.get("objectId");
-    var owner_name = owner.get("userName");
+    if (mode == "friend"){
+        var owner_name = owner.get("bookShelfOwner");
+    } else {
+        var owner_name = owner.get("userName");
+    }
     var ownersList = [];
     
     ownersList = $("<ons-list-item modifier='chevron' class='owners_items' onclick='actionShowBook(this)'><ons-row class='row-item'><ons-col class='colno'></ons-col><ons-col class='owner_name'></ons-col></ons-row></ons-list-item>");
@@ -178,7 +192,7 @@ function drowOwnerList(owner,i,callback) {
     ownersList.find(".owner_name").text(owner_name);
     ownersList.appendTo($("#groupUsersListView"));
     ownersList.appendTo($("#usersListView"));
-    
+    ownersList.appendTo($("#friendsListView"));
     ons.compile(ownersList[0]);
     callback();
 }
@@ -208,13 +222,15 @@ function actionShowBook(o){
     showBooks('groupMembersBookshelf',o);
 }
 
-function searchUser(){
+//ユーザー名を完全一致で検索して、権限を与える巻数
+function searchUser(mode){
     checkUser($('.search_user_name').val(),function(){
         
-    });
+    },mode);
 }
 
-function checkUser(userName,rollback){
+//ユーザーがいるかどうかチェックする
+function checkUser(userName,rollback,mode){
     var UserList = [];
     var DS = ncmb.User;
         DS.equalTo("userName", userName)
@@ -223,13 +239,76 @@ function checkUser(userName,rollback){
             if (results.length == 0 ){
                 alert("ユーザー情報の取得に失敗しました。ユーザーがいません");
             } else {
-                joinChooseUserInMyGroup(results[0],$("#choose_group_name").text());
-                
-		    }
+                if(mode == "GroupMode"){
+                    joinChooseUserInMyGroup(results[0],$("#choose_group_name").text());
+                } else if(mode == "BookShelfMode"){
+                    var userMyBookShelf = ncmb.DataStore("userMyBookShelf");
+                    userMyBookShelf.equalTo("userName",results[0].get("userName"))
+                                   .fetchAll()
+                                   .then(function(results2){
+                                       if(results2.length == 0){
+                                           friendCanLookMyBookShelfMsg(results[0]);   
+                                       } else {
+                                            alert("すでに[" + results2[0].get("userName") + "]さんはあなたの本棚を見れます")
+                                       }
+                                   })
+                }
+            }    
             })
+            
             .catch(function(err){
                 alert(err);
             });
+}
+
+//本棚を見せられるようにする
+function addUserMyBookShelf(user){
+    var currentUser = ncmb.User.getCurrentUser();
+    var userMyBookShelf = ncmb.DataStore("userMyBookShelf");
+    var ds = new userMyBookShelf;
+    //取得した本の内容をセットする
+    ds.set("userName",user.get("userName"))
+      .set("bookShelfOwner",currentUser.get("userName"))
+      .save()
+      .then(function(results){
+        alert("本を貸せるようになりました。");
+      })
+      .then(function(results){
+          bookNavi.popPage();
+      })
+      .catch(function(err){
+          alert(err);
+      }); 
+
+}
+
+//ユーザーリストを取得する
+function getFriendsList(){
+    var UserList = [];
+    var currentUser = ncmb.User.getCurrentUser();
+    var DS = ncmb.DataStore("userMyBookShelf");
+    
+        DS.equalTo("userName", currentUser.get("userName"))
+          .fetchAll()
+          .then(function(results){
+            if (results.length == 0 ){
+                alert("友達の本棚が見れるように設定されていません。友達に本棚を見れるように設定してもらってください");
+            } else {
+                    var ownersListHd = [];
+                    ownersListHd = $("<ons-list-header><ons-row><ons-col>No.</ons-col><ons-col>本棚の所有者</ons-col></ons-row></ons-list-header");
+                    ownersListHd.appendTo($("#friendsListView"));
+                    ons.compile(ownersListHd[0]);
+                    for(var i = 0; i < results.length; i++){
+                        var owner = results[i];
+                        drowOwnerList(owner,i,function(){
+                                //callback
+                        },"friend");
+                    }
+            }
+          })
+          .catch(function(err){
+            alert(err);
+          });
 }
 
 

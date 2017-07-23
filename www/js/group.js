@@ -5,12 +5,12 @@ function getGroupsList(groupType){
     var equalToFirld = ";"
     var equalToText = ";"
     if (groupType == "myGroups"){
-        equalToFirld = ('"roleAdmin"');
+        equalToFirld = '"roleAdmin"';
         equalToText = (currentUser.get("userName"));
     } else if (groupType == "belongGroups"){
-        equalToFirld = ('"roleAdmin"');
+        equalToFirld = '"belongUser"';
         //ここには自分が所属しているユーザーリストだけが来るイメージ。そのグループを一致文表示したらいい。
-        equalToText = ("前田");
+        equalToText = ("oya");
     }
     //自分が所属しているグループ一覧を取得
     ncmb.Role.equalTo("roleAdmin",equalToText)
@@ -194,11 +194,12 @@ function addRole(user,role){
             	if (results.length == 0 ){
 		            alert("roleがないです");
 		        } else {
-            	    var r = results[0]
+            	    var r = results[0];
                 	r.addUser(settingUser)
                      .update()
                      .then(function(results){
-                        alert("OK")
+                        alert("グループに所属させました");
+                        //bookNavi.popPage();
                      })
                      .catch(function(err){
                         alert(err);
@@ -207,7 +208,7 @@ function addRole(user,role){
              })
              .catch(function(err){
                 alert(err);
-             })
+             });
 }
 
 
@@ -242,10 +243,10 @@ function makeNewGroup(){
     var currentUser = ncmb.User.getCurrentUser();
     var DS = new ncmb.Role(groupName);
     
-    DS.addUser(currentUser)
-      .set("roleDisp",groupDisp)
-      .set("roleAdmin",groupAdmin)
-      .save()
+    DS.addUser(currentUser);
+    DS.set("roleDisp",groupDisp);
+    DS.set("roleAdmin",groupAdmin);
+    DS.save()
       .then(function(){
             makeNewGroupMsg(groupName);
             bookNavi.popPage();
@@ -254,7 +255,6 @@ function makeNewGroup(){
            alert(err);
       })
 }
-
 
 //group一覧を表示
 function showGroupsList(){
@@ -267,6 +267,8 @@ function showGroupsList(){
              })
 }
 
+
+//以下テスト用
 function getMyBelongGroup(groupName){
     var currentUser = ncmb.User.getCurrentUser();
 //    alert("currentUser:"+currentUser.get("userName"));
@@ -302,4 +304,22 @@ function getUserBelongGroup(roleName){
              .catch(function(err){
                  alert(err);
              })   
+}
+
+function roleAddAclTest(){
+    var currentUser = ncmb.User.getCurrentUser();
+    ncmb.Role.equalTo("roleAdmin","ko")
+             .fetchAll()
+             .then(function(results){
+    //aclをPublicにして、誰でもアクセスできるようにする。
+    alert(results[0].roleName);
+    var acl = new ncmb.Acl();
+//    acl.setUserReadAccess(currentUser, true);
+//    acl.setUserWriteAccess(currentUser, true);
+//    acl.setPublicReadAccess(false);
+    acl.setPublicWriteAccess(false);
+    results[0].set("acl",acl)
+    results[0].update();
+    alert("4");
+             })
 }

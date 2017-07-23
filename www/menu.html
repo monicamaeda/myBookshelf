@@ -10,11 +10,14 @@
     <ons-list>
         <ons-list-header>自分の本棚</ons-list-header>
         <ons-list-item class="list__item--tappable list__item__line-height" modifier="chevron">
+            <ons-row onclick="bookNavi.pushPage('booksList.html');showBooks('myBookshelf','');">持っている本を確認する</ons-row>    
+        </ons-list-item>        
+        <ons-list-item class="list__item--tappable list__item__line-height" modifier="chevron">
             <ons-row onclick="bookNavi.pushPage('inputBookName.html');setOwnerName();">本を登録する</ons-row>    
         </ons-list-item>
         <ons-list-item class="list__item--tappable list__item__line-height" modifier="chevron">
-            <ons-row onclick="bookNavi.pushPage('booksList.html');showBooks('myBookshelf','');">持っている本を確認する</ons-row>    
-        </ons-list-item>        
+            <ons-row onclick="bookNavi.pushPage('canLookFriend.html');">私の本棚を友達が見れるようにする</ons-row>    
+        </ons-list-item>
 
 <!--未実装部分
         <ons-list-item class="list__item--tappable list__item__line-height" modifier="chevron">
@@ -22,7 +25,8 @@
         </ons-list-item>
         <ons-list-item class="list__item--tappable list__item__line-height" modifier="chevron">
             <ons-row onclick="bookNavi.pushPage('delBookName.html');setOwnerName();">x 登録した本を消す</ons-row>    
-        </ons-list-item>-->
+        </ons-list-item>
+-->
 
 <!--未実装部分
         <ons-list-header>みんなの本棚</ons-list-header>
@@ -31,12 +35,31 @@
         </ons-list-item>
         <ons-list-item class="list__item--tappable list__item__line-height" modifier="chevron">
             <ons-row>x 他の人の感想を見る</ons-row>    
-        </ons-list-item>-->
-        
-        <ons-list-header>仲間の本棚</ons-list-header>
-        <ons-list-item class="list__item--tappable list__item__line-height" modifier="chevron">
-            <ons-row onclick="bookNavi.pushPage('html/group/showGroups.html');getGroupsList('belongGroups');">仲間の本棚を見る（借りる）</ons-row>    
         </ons-list-item>
+-->
         
+        <ons-list-header>友達の本棚</ons-list-header>
+        <ons-list-item class="list__item--tappable list__item__line-height" modifier="chevron">
+            <ons-row onclick="bookNavi.pushPage('html/showFriends.html');getFriendsList();">友達の本棚を見る（借りる）</ons-row>    
+        </ons-list-item>
+<!--未実装部分
+        <ons-list-header>グループの本棚</ons-list-header>
+        <ons-list-item class="list__item--tappable list__item__line-height" modifier="chevron">
+            <ons-row onclick="bookNavi.pushPage('html/group/showGroups.html');getGroupsList('belongGroups');">友達の本棚を見る（借りる）</ons-row>    
+        </ons-list-item>
+        <ons-list-header>グループ</ons-list-header>
+        <ons-list-item class="list__item--tappable list__item__line-height" modifier="chevron">
+            <ons-row onclick="bookNavi.pushPage('html/group/makeGroup.html');">グループを作る</ons-row>    
+        </ons-list-item>
+        <ons-list-item class="list__item--tappable list__item__line-height" modifier="chevron">
+            <ons-row onclick="bookNavi.pushPage('html/group/myGroups.html');getGroupsList('myGroups');">他の人を自分のグループに入れる</ons-row>
+        </ons-list-item>
+
+        <ons-list-item class="list__item--tappable list__item__line-height" modifier="chevron">
+            <ons-row onclick="bookNavi.pushPage('html/group/showGroups.html');getGroupList(otherGroups);">他のグループに新しく入る</ons-row>    
+        </ons-list-item>        
+-->
+
+
     </ons-list>    
 </ons-page>

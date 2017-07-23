@@ -24,8 +24,9 @@ function inputBook(){
         ds.set("book_name", book_name)
           .set("book_number", book_number)
           .set("owner_name", owner_name)
+          .set("borrow_user", "")
           .save()
-          .then(function(resulte){
+          .then(function(result){
             $("#input_button_area").hide();
             $("#created_message").text("本の登録が完了しました！");
             //スコアの更新が完了したら、メニュー画面に遷移するボタンを表示させる
@@ -115,7 +116,11 @@ function drowBookList(book,i,mode,callback) {
     booksList.find(".book_name").text(book_name);
     booksList.find(".book_number").text(book_number);
     booksList.find(".owner_name").text(owner_name);
-    booksList.find(".borrow_user").text(borrow_user);
+    if (borrow_user == ""){
+        
+    } else {
+        booksList.find(".borrow_user").text(borrow_user);
+    }
     booksList.appendTo($("#booksList"));
     
     ons.compile(booksList[0]);
@@ -124,29 +129,44 @@ function drowBookList(book,i,mode,callback) {
 
 //本の詳細情報を表示する
 function showBookDtl(o){
-    var btn_drow_status = false;
+    var btn_rentOrReturn_draw_mode = "";
     var book_name = $('.book_name', o).text();
     var book_number = $('.book_number', o).text();
     var owner_name = $('.owner_name', o).text();
     var borrow_user = $('.borrow_user', o).text();
+    
     bookNavi.pushPage("bookDtl.html");
     $(document).on('pageinit', '#Book_Dtl_page', function() {
+        //TODO ボタンを削除する。削除するのは、なぜかborrow_userをなぜか複数もっているから。最後にクリックした文だけでいいのにな？バグ。
+        $("#borrow_book_button_field").empty();
         $('.book_name_dtl',this).text(book_name);  
         $('.book_number_dtl',this).text(book_number);      
         $('.owner_name_dtl',this).text(owner_name);  
         $('.borrow_user_dtl',this).text(borrow_user);
+        //本を貸している場合には、本を返す、とするための判定
+        if (borrow_user == ""){
+            btn_rentOrReturn_draw_mode = "";
+        } else if (borrow_user == "(いません)"){
+            btn_rentOrReturn_draw_mode = "rent";
+        } else {
+            btn_rentOrReturn_draw_mode = "Return";            
+        }        
         //自分が所有者だったら借りれないようにするために借りるボタンを作らない
         if (owner_name == ncmb.User.getCurrentUser().get("userName")){
             
         //まだボタンを作っていなかったら、初回ということで借りるボタンを作る
-        } else if(btn_drow_status == false){
+        } else if(btn_rentOrReturn_draw_mode == "rent"){
             var btn;
             btn = $("<ons-button modifier='large' style='margin: 0 auto;' onclick='borrowBook();'>本を借りる</ons-button>");
             btn.appendTo($("#borrow_book_button_field"));
             ons.compile(btn[0]);
-            btn_drow_status = true;
+        } else if(btn_rentOrReturn_draw_mode = "Return"){
+            var btn;
+            btn = $("<ons-button modifier='large' style='margin: 0 auto;' onclick='returnBook();'>本を返す</ons-button>");
+            btn.appendTo($("#borrow_book_button_field"));
+            ons.compile(btn[0]);
         } else {
-            //処理なし
+            
         }
     });
 }
@@ -154,7 +174,7 @@ function showBookDtl(o){
 //本を借りる処理
 function borrowBook(){
     //フォームから本の情報を取得する
-    //alert('start brw book function');
+    console.log("alert('start brw book function')");
     var book_name = $(".book_name_dtl").text();
     var book_number = $(".book_number_dtl").text();
     var owner_name = $(".owner_name_dtl").text();
@@ -177,14 +197,47 @@ function borrowBook(){
           }
       })
       .then(function(results){
-          showBooks("reload",owner_name);
           bookNavi.popPage();
+          bookNavi.popPage();
+          showBooks("reload",owner_name);
       })
       .catch(function(err){
           alert(err);
       }); 
 }
 
+function returnBook(){
+    //フォームから本の情報を取得する
+    console.log("alert('start return book function')");
+    var book_name = $(".book_name_dtl").text();
+    var book_number = $(".book_number_dtl").text();
+    var owner_name = $(".owner_name_dtl").text();
+    //Bookクラスのインスタンスを作成する
+    var ds = ncmb.DataStore("Book");
+        
+    //取得した本の内容をセットする
+    ds.equalTo("book_name",book_name)
+      .equalTo("book_number",book_number)
+      .equalTo("owner_name",owner_name)
+      .fetchAll()
+      .then(function(results){
+          if(results.length == 0){
+              alert("該当の本の情報が取得できませんでした");
+          } else {
+          results[0].set("borrow_user", "");
+          results[0].update();
+          alert(owner_name+"さんに「"+ book_name+"」の"+book_number+"巻を返しました")
+          }
+      })
+      .then(function(results){
+          bookNavi.popPage();
+          bookNavi.popPage();
+          showBooks("reload",owner_name);
+      })
+      .catch(function(err){
+          alert(err);
+      }); 
+}
 
 ///// Delete memo
 function onDeleteLink() {
